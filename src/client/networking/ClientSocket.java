@@ -84,7 +84,15 @@ public class ClientSocket implements Client
 
   @Override public void sendMessage(Message message)
   {
-    Request response= request(message,"addMessage");
+    try
+    {
+      //----------------------------
+      Request response= request(message,"addMessage");
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
   }
 
   private Request request(Object arg, String type)

@@ -25,7 +25,7 @@ public class ChatHandlerImpl implements ChatHandler
   @Override public void addMessages(Message message)
   {
     messages.add(message);
-    support.firePropertyChange("addMessage",null,message);
+   // support.firePropertyChange("addMessage",null,message);
   }
 
   @Override public void addListener(String eventName,

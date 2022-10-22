@@ -1,6 +1,8 @@
 package shared;
 
-public class Message
+import java.io.Serializable;
+
+public class Message implements Serializable
 {
   private String user;
   private String messageBody;
@@ -19,5 +21,9 @@ public class Message
   public String getMessageBody()
   {
     return messageBody;
+  }
+
+  public String toString(){
+    return user +":"+messageBody;
   }
 }

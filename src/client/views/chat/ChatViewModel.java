@@ -24,7 +24,7 @@ public class ChatViewModel
     this.modelFactory = modelFactory;
     messageTextField = new SimpleStringProperty();
     users = FXCollections.observableArrayList(modelFactory.getLoginModel().getAllUsers());
-     //chatViewsGlobalChat=FXCollections.observableArrayList(modelFactory.getChatModel().getMessages());
+    //chatViewsGlobalChat=FXCollections.observableArrayList();
 
     modelFactory.getLoginModel().addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),this::userAdded);
     modelFactory.getChatModel().addListener("addMessage",this::addMessage);
@@ -32,8 +32,8 @@ public class ChatViewModel
 
   private void addMessage(PropertyChangeEvent event)
   {
-    Platform.runLater(()-> chatViewsGlobalChat.add(
-        (Message) event.getNewValue()));
+      Platform.runLater(()-> chatViewsGlobalChat.add(
+          (Message) event.getNewValue()));
   }
 
   private void userAdded(PropertyChangeEvent event)
@@ -48,7 +48,10 @@ public class ChatViewModel
 
   public void sendMessage()
   {
-    Message message= new Message(modelFactory.getLoginModel().getUser().getUserName(),messageTextField.get());
+    /*modelFactory.getChatModel().sendMessage(new Message(modelFactory.getLoginModel().getUser().getUserName(),
+        messageTextField.getValue()));*/
+   Message message= new Message(modelFactory.getLoginModel().getUser().getUserName(),messageTextField.getValue());
+   modelFactory.getChatModel().sendMessage(message);
   }
 
   public ObservableList<Message> getMessages(){

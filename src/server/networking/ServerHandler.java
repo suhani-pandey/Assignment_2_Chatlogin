@@ -80,12 +80,13 @@ public class ServerHandler implements Runnable
           }
           else if("addMessage".equals(response.getType())){
             chatHandler.addMessages((Message) response.getArg());
+            //outputStream.writeObject(new Request("addMessage",null));
             pool.broadcastMessage((Message) response.getArg());
             break;
           }
-          else if ("getMessage".equals(response.getType())){
+          else if ("getMessages".equals(response.getType())){
             List<Message> messages= chatHandler.getMessages();
-            outputStream.writeObject(new Request("getMessage",messages));
+            outputStream.writeObject(new Request("getMessages",messages));
         }
         }
       catch (IOException | ClassNotFoundException e)

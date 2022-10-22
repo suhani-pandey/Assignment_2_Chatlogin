@@ -28,11 +28,11 @@ public class ChatModelImpl implements ChatModel
   }
 
   private void addMessage(PropertyChangeEvent event)
-  {/*
+  {
     Message message= (Message) event.getNewValue();
     support.firePropertyChange("addMessage",null,message);
-  */
-     support.firePropertyChange(event);
+
+    // support.firePropertyChange(event);
   }
 
   @Override public List<String> getUsersname()
