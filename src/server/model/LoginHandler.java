@@ -30,8 +30,9 @@ public class LoginHandler implements Login
   {
     boolean status = listOfUsers.haveUsers(user);
     if (status) {
-     // support.firePropertyChange("NewListener",null,user);
+
       support.firePropertyChange(Request.TYPE.ONLOGGEDINADDUSER.toString(),null,user);
+     // System.out.println(support.hasListeners(Request.TYPE.ONLOGGEDINADDUSER.toString()));
     }
     return status;
   }

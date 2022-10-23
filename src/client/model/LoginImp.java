@@ -16,6 +16,7 @@ public class LoginImp implements LoginModel
   {
     this.client=client;
     support= new PropertyChangeSupport(this);
+    client.startClient();
    // client.addListener("userAdded",this::userAdded);
   }
 

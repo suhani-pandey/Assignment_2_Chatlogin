@@ -1,60 +1,76 @@
 package client.views.chat;
 
 import client.core.ModelFactory;
+import client.model.ChatModel;
+import client.model.LoginModel;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import shared.Message;
+import shared.User;
 import shared.util.Request;
 
 import java.beans.PropertyChangeEvent;
 
 public class ChatViewModel
 {
-  private ModelFactory modelFactory;
+  private ChatModel chatModel;
+  private LoginModel loginModel;
   private ObservableList<String> users;
   private ObservableList<Message> chatViewsIndivisualChat;
   private ObservableList<Message> chatViewsGlobalChat;
   private StringProperty messageTextField;
 
-  public ChatViewModel(ModelFactory modelFactory)
+  public ChatViewModel(ChatModel chatModel, LoginModel loginModel)
   {
-    this.modelFactory = modelFactory;
+    this.chatModel = chatModel;
+    this.loginModel=loginModel;
     messageTextField = new SimpleStringProperty();
-    users = FXCollections.observableArrayList(modelFactory.getLoginModel().getAllUsers());
-    //chatViewsGlobalChat=FXCollections.observableArrayList();
+    users = FXCollections.observableArrayList(chatModel.getUsersname());
 
-    modelFactory.getLoginModel().addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),this::userAdded);
-    modelFactory.getChatModel().addListener("addMessage",this::addMessage);
+    chatViewsGlobalChat = FXCollections.observableArrayList(
+        chatModel.getMessages());
+
+    chatModel.addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),
+        this::userAdded);
+    chatModel.addListener("addMessage", this::addMessage);
+  }
+
+  public StringProperty messageTextFieldProperty()
+  {
+    return messageTextField;
   }
 
   private void addMessage(PropertyChangeEvent event)
   {
-      Platform.runLater(()-> chatViewsGlobalChat.add(
-          (Message) event.getNewValue()));
+    System.out.println(event.getNewValue() + ": chat view model");
+    Platform.runLater(
+        () -> chatViewsGlobalChat.add((Message) event.getNewValue()));
   }
 
   private void userAdded(PropertyChangeEvent event)
   {
-    Platform.runLater(()->users.add((String) event.getNewValue()));
+    Platform.runLater(
+        () -> users.add(((User) event.getNewValue()).getUserName()));
   }
 
   public ObservableList<String> getUsers()
   {
+    System.out.println(users + "");
     return users;
+
   }
 
   public void sendMessage()
   {
-    /*modelFactory.getChatModel().sendMessage(new Message(modelFactory.getLoginModel().getUser().getUserName(),
-        messageTextField.getValue()));*/
-   Message message= new Message(modelFactory.getLoginModel().getUser().getUserName(),messageTextField.getValue());
-   modelFactory.getChatModel().sendMessage(message);
+    chatModel.sendMessage(new Message(loginModel.getUser().getUserName(), messageTextField.getValue()));
+    //System.out.println(messageTextField.getValue());
   }
 
-  public ObservableList<Message> getMessages(){
+  public ObservableList<Message> getMessages()
+  {
     return chatViewsGlobalChat;
   }
 }

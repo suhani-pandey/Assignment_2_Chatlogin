@@ -11,4 +11,6 @@ public interface ChatHandler extends Subject
 
   void addMessages(Message message);
 
+  List<Message> getPreviousMessage();
+
 }

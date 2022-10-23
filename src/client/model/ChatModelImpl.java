@@ -17,7 +17,7 @@ public class ChatModelImpl implements ChatModel
   public ChatModelImpl(Client client){
     this.client=client;
     support= new PropertyChangeSupport(this);
-    client.addListener("addMessage",this::addMessage);
+    client.addListener("addNewMessage",this::addMessage);
     client.addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),this::useradded);
 
   }
@@ -31,7 +31,7 @@ public class ChatModelImpl implements ChatModel
   {
     Message message= (Message) event.getNewValue();
     support.firePropertyChange("addMessage",null,message);
-
+    //System.out.println(message + ": chat model impl");
     // support.firePropertyChange(event);
   }
 
@@ -43,7 +43,7 @@ public class ChatModelImpl implements ChatModel
 
   @Override public List<Message> getMessages()
   {
-    return client.getMessages();
+    return client.getPreviousMessages();
   }
 
   @Override public void sendMessage(Message message)

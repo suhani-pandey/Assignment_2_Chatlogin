@@ -31,9 +31,7 @@ public class LoginController implements ViewController
 
   public void onLoginButton() throws IOException
   {
-    // error when login method is called
     if (viewModelFactory.getLoginViewModel().login()){
-      //System.out.println("inside if");
       viewHandler.openGlobalChatPage();
     }
   }

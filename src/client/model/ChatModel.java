@@ -11,4 +11,6 @@ public interface ChatModel extends Subject
 
   List<Message> getMessages();
   void sendMessage(Message message);
+
+
 }

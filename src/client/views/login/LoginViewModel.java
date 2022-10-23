@@ -1,6 +1,7 @@
 package client.views.login;
 
 import client.core.ModelFactory;
+import client.model.LoginModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import shared.User;
@@ -8,11 +9,11 @@ import shared.User;
 public class LoginViewModel
 {
   private StringProperty username,password,label;
-  private ModelFactory modelFactory;
+  private LoginModel loginModel;
 
-  public LoginViewModel(ModelFactory modelFactory)
+  public LoginViewModel(LoginModel loginModel)
   {
-    this.modelFactory = modelFactory;
+    this.loginModel=loginModel;
     username= new SimpleStringProperty();
     password= new SimpleStringProperty();
     label= new SimpleStringProperty();
@@ -36,7 +37,7 @@ public class LoginViewModel
   public boolean login(){
     User user= new User(username.get(),password.get());//.get
 
-   if (!modelFactory.getLoginModel().login(user)){
+   if (!loginModel.login(user)){
       label.set("Username or password is incorrect");
     return false;
     }

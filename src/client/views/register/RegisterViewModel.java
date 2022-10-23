@@ -1,16 +1,17 @@
 package client.views.register;
 
 import client.core.ModelFactory;
+import client.model.LoginModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class RegisterViewModel
 {
   private StringProperty usernameRegister,passswordRegister,reenterRegister,label;
-  private ModelFactory modelFactory;
+  private LoginModel loginModel;
 
-  public RegisterViewModel(ModelFactory modelFactory){
-    this.modelFactory= modelFactory;
+  public RegisterViewModel(LoginModel loginModel){
+    this.loginModel=loginModel;
     usernameRegister= new SimpleStringProperty();
     passswordRegister= new SimpleStringProperty();
     reenterRegister= new SimpleStringProperty();
@@ -49,7 +50,7 @@ public class RegisterViewModel
     }
     else
     {
-      if (modelFactory.getLoginModel().addUser(username, password))
+      if (loginModel.addUser(username, password))
       {
         {
           label.set("Account Successfully Created");

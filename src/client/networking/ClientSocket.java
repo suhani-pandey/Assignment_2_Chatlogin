@@ -15,13 +15,14 @@ import java.util.List;
 public class ClientSocket implements Client
 {
   private PropertyChangeSupport support;
+  private User user;
 
   public ClientSocket()
   {
     support = new PropertyChangeSupport(this);
   }
 
-  @Override public void listenToServer(User user)
+ /* @Override public void listenToServer(User user)
   {
     try
     {
@@ -39,7 +40,7 @@ public class ClientSocket implements Client
     {
       e.printStackTrace();
     }
-  }
+  }*/
 
   @Override public List<String> getUserList()
   {
@@ -63,7 +64,7 @@ public class ClientSocket implements Client
       boolean isPossible = (boolean) response.getArg();
       if (isPossible)
       {
-        listenToServer(user);
+        //listenToServer(user);
         //not sure............................
         support.firePropertyChange("userAdded",null,user);
       }
@@ -76,23 +77,52 @@ public class ClientSocket implements Client
     return false;
   }
 
-  @Override public List<Message> getMessages()
+  /*@Override public List<Message> getMessages()
   {
     Request response= request(null,"getMessages");
     return (List<Message>) response.getArg();
   }
-
+*/
   @Override public void sendMessage(Message message)
   {
     try
     {
       //----------------------------
-      Request response= request(message,"addMessage");
+      Request response= request(message,"sendMessage");
+      //System.out.println(response.getArg() + " : send message in client socket");
     }
     catch (Exception e)
     {
       e.printStackTrace();
     }
+  }
+
+  @Override public List<Message> getPreviousMessages()
+  {
+    Request response = request(null,"getPreviousMessages");
+    return (List<Message>) response.getArg();
+  }
+
+  @Override public void startClient()
+  {
+    this.user=user;
+    try
+    {
+      Socket socket = new Socket("localhost", 2001);
+      ObjectOutputStream outputStream = new ObjectOutputStream(
+          socket.getOutputStream());
+      ObjectInputStream inputStream = new ObjectInputStream(
+          socket.getInputStream());
+
+      Thread th = new Thread(
+          () -> listenToServer(inputStream, outputStream));
+      th.start();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+
   }
 
   private Request request(Object arg, String type)
@@ -115,7 +145,7 @@ public class ClientSocket implements Client
   }
 
   private void listenToServer(ObjectInputStream inputStream,
-      ObjectOutputStream outputStream, User user)
+      ObjectOutputStream outputStream)
   {
     try
     {
@@ -123,12 +153,13 @@ public class ClientSocket implements Client
       while (true)
       {
         Request response = (Request) inputStream.readObject();
-        if(response.getType().equals("addMessage")){
+        support.firePropertyChange(response.getType(),null,response.getArg());
+        /*if(response.getType().equals("addMessage")){
           support.firePropertyChange("addMessage",null,response.getArg());
         }
         else if (response.getType().equals(Request.TYPE.ONLOGGEDINADDUSER.toString())){
           support.firePropertyChange(Request.TYPE.ONLOGGEDINADDUSER.toString(),null,response.getArg());
-        }
+        }*/
       }
     }
     catch (IOException | ClassNotFoundException e)

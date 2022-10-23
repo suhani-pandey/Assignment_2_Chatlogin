@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ServerHandler implements Runnable
 {
-  private Socket  socket;
+  private Socket socket;
   private ChatHandler chatHandler;
   private ConnectionPool pool;
   private Login login;
@@ -23,16 +23,18 @@ public class ServerHandler implements Runnable
   private ObjectOutputStream outputStream;
   private ObjectInputStream inputStream;
 
-  public ServerHandler(Socket socket,Login login,ConnectionPool pool,ChatHandler chatHandler){
-    this.socket=socket;
-    this.login=login;
-    this.chatHandler=chatHandler;
-    this.pool=pool;
+  public ServerHandler(Socket socket, Login login, ConnectionPool pool,
+      ChatHandler chatHandler)
+  {
+    this.socket = socket;
+    this.login = login;
+    this.chatHandler = chatHandler;
+    this.pool = pool;
 
     try
     {
-      inputStream= new ObjectInputStream(socket.getInputStream());
-      outputStream= new ObjectOutputStream(socket.getOutputStream());
+      inputStream = new ObjectInputStream(socket.getInputStream());
+      outputStream = new ObjectOutputStream(socket.getOutputStream());
     }
     catch (IOException e)
     {
@@ -42,65 +44,77 @@ public class ServerHandler implements Runnable
 
   @Override public void run()
   {
-    while (true){
+    while (true)
+    {
       try
       {
         //System.out.println("Server handler");
-        Request response= (Request) inputStream.readObject();
+        Request response = (Request) inputStream.readObject();
 
-
-        if ("Listener".equals(response.getType())) {
-          this.user= (User) response.getArg();
-          pool.addConnection(this);
-          login.addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),this::onUserLoggedIn);
-          chatHandler.addListener("addMessage",this::messageAdded);
-
+        switch (response.getType())
+        {
+          case "Listener" -> {
+            this.user = (User) response.getArg();
+            login.addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),
+                this::onUserLoggedIn);
+            chatHandler.addListener("addNewMessage", this::messageAdded);
+          }
         }
-        if (Request.TYPE.ADDUSER.toString().equals(response.getType())){
-          boolean temp= login.addUser((User) response.getArg());
-          outputStream.writeObject(new Request(Request.TYPE.ADDUSER.toString(),temp));
+        if (Request.TYPE.ADDUSER.toString().equals(response.getType()))
+        {
+          boolean temp = login.addUser((User) response.getArg());
+          outputStream.writeObject(
+              new Request(Request.TYPE.ADDUSER.toString(), temp));
 
           break;
-        }else if (Request.TYPE.LOGINPOSSIBLE.toString().equals(response.getType()))
+        }
+        else if (Request.TYPE.LOGINPOSSIBLE.toString()
+            .equals(response.getType()))
         {
           boolean temp = login.login((User) response.getArg());
           if (temp)
           {
             this.user = user;
-            //System.out.println(temp + " server handler");
-            outputStream.writeObject(new Request(Request.TYPE.LOGINPOSSIBLE.toString(), temp));
-
-            pool.broadcastUserName((User) response.getArg());
+            outputStream.writeObject(
+                new Request(Request.TYPE.LOGINPOSSIBLE.toString(), temp));
+            pool.addConnection(this);
           }
           break;
-        }else if (Request.TYPE.USERLIST.toString().equals(response.getType())){
-            List<String> loginAllUsers = login.getAllUsers();
-            outputStream.writeObject(new Request(Request.TYPE.USERLIST.toString(),loginAllUsers));
-            break;
-          }
-          else if("addMessage".equals(response.getType())){
-            chatHandler.addMessages((Message) response.getArg());
-            //outputStream.writeObject(new Request("addMessage",null));
-            pool.broadcastMessage((Message) response.getArg());
-            break;
-          }
-          else if ("getMessages".equals(response.getType())){
-            List<Message> messages= chatHandler.getMessages();
-            outputStream.writeObject(new Request("getMessages",messages));
         }
+        else if (Request.TYPE.USERLIST.toString().equals(response.getType()))
+        {
+          List<String> loginAllUsers = login.getAllUsers();
+          outputStream.writeObject(
+              new Request(Request.TYPE.USERLIST.toString(), loginAllUsers));
+          break;
         }
+        else if ("sendMessage".equals(response.getType()))
+        {
+          chatHandler.addMessages((Message) response.getArg());
+          outputStream.writeObject(new Request("addNewMessage", null));
+          break;
+        }
+        else if ("getPreviousMessages".equals(response.getType()))
+        {
+          List<Message> messages = chatHandler.getPreviousMessage();
+          outputStream.writeObject(
+              new Request("getPreviousMessages", messages));
+        }
+      }
       catch (IOException | ClassNotFoundException e)
       {
         e.printStackTrace();
       }
     }
-    }
+  }
 
   private void messageAdded(PropertyChangeEvent event)
   {
     try
     {
-      outputStream.writeObject(new Request(event.getPropertyName(),event.getNewValue()));
+      //System.out.println(event.getNewValue() + ": from server handler message added");
+      outputStream.writeObject(
+          new Request(event.getPropertyName(), event.getNewValue()));
     }
     catch (IOException e)
     {
@@ -113,7 +127,8 @@ public class ServerHandler implements Runnable
   {
     try
     {
-      outputStream.writeObject(new Request(event.getPropertyName(),event.getNewValue()));
+      outputStream.writeObject(
+          new Request(event.getPropertyName(), event.getNewValue()));
     }
     catch (IOException e)
     {
@@ -125,7 +140,7 @@ public class ServerHandler implements Runnable
   {
     try
     {
-      outputStream.writeObject(new Request("addMessage",msg));
+      outputStream.writeObject(new Request("getMessage", msg));
     }
     catch (IOException e)
     {
@@ -142,13 +157,13 @@ public class ServerHandler implements Runnable
   {
     try
     {
-      outputStream.writeObject(new Request(Request.TYPE.ONLOGGEDINADDUSER.toString(),users));
+      outputStream.writeObject(
+          new Request(Request.TYPE.ONLOGGEDINADDUSER.toString(), users));
     }
     catch (IOException e)
     {
       e.printStackTrace();
     }
   }
-
 
 }

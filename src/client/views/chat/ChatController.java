@@ -9,14 +9,18 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import shared.Message;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ChatController implements ViewController
 {
+  @FXML private ListView<String> usersList;
   private ViewHandler viewHandler;
   private ViewModelFactory viewModelFactory;
 
   @FXML private ListView<Message> chatViewsIndivisualChat;
-  @FXML private ListView<String> onlineUserViews;
-  @FXML private ListView<Message> chatViewsGlobalChat;
+  @FXML private ListView<Message> chatViewsGlobalChat; //
 
   @FXML private TextField messageTextField;
 
@@ -27,11 +31,17 @@ public class ChatController implements ViewController
     this.viewHandler=viewHandler;
     this.viewModelFactory=viewModelFactory;
 
-    onlineUserViews.setItems(viewModelFactory.getChatViewModel().getUsers());
+
+    usersList.setItems(viewModelFactory.getChatViewModel().getUsers());
+
+    chatViewsGlobalChat.setItems(viewModelFactory.getChatViewModel().getMessages());
+
+    messageTextField.textProperty().bindBidirectional(viewModelFactory.getChatViewModel().messageTextFieldProperty());
 
   }
 
 
+  // send button for individual button
   public void onSendButton(ActionEvent actionEvent)
   {
     viewModelFactory.getChatViewModel().sendMessage();
@@ -44,11 +54,6 @@ public class ChatController implements ViewController
     viewHandler.openGlobalChatPage();
   }
 
-  public void onSelectUserButtonGlobalChat(ActionEvent actionEvent)
-  {
-
-  }
-
   //Indivisual chat
 
   public void onSelectUserButtonIndivisualChat(ActionEvent actionEvent)
@@ -57,4 +62,19 @@ public class ChatController implements ViewController
   }
 
 
+
+  public void onBackToIndivisualChat(ActionEvent actionEvent)
+  {
+    //viewHandler.openIndivisualChatPage();
+  }
+
+  public void onSendGlobalButton(ActionEvent actionEvent)
+  {
+    viewModelFactory.getChatViewModel().sendMessage();
+    messageTextField.clear();
+  }
+
+  public void onSelectUserButtonGlobalChat(ActionEvent actionEvent)
+  {
+  }
 }

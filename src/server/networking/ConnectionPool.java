@@ -19,7 +19,6 @@ public class ConnectionPool
   public void broadcastMessage(Message msg){
     for (ServerHandler conn : connections)
     {
-      if (!conn.getUser().equals(msg.getUser()))
         conn.sendMessageToClient(msg);
     }
   }
