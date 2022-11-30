@@ -22,6 +22,7 @@ public class ChatViewModel
   private ObservableList<Message> chatViewsIndivisualChat;
   private ObservableList<Message> chatViewsGlobalChat;
   private StringProperty messageTextField;
+  private StringProperty usernameLabel;
 
   public ChatViewModel(ChatModel chatModel, LoginModel loginModel)
   {
@@ -29,6 +30,7 @@ public class ChatViewModel
     this.loginModel=loginModel;
     messageTextField = new SimpleStringProperty();
     users = FXCollections.observableArrayList(chatModel.getUsersname());
+    //usernameLabel.setValue(loginModel.getUser().getUserName());
 
     chatViewsGlobalChat = FXCollections.observableArrayList(
         chatModel.getMessages());
@@ -36,6 +38,11 @@ public class ChatViewModel
     chatModel.addListener(Request.TYPE.ONLOGGEDINADDUSER.toString(),
         this::userAdded);
     chatModel.addListener("addMessage", this::addMessage);
+  }
+
+  public StringProperty usernameLabelProperty()
+  {
+    return usernameLabel;
   }
 
   public StringProperty messageTextFieldProperty()

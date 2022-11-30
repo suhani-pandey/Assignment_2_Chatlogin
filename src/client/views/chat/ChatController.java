@@ -5,6 +5,7 @@ import client.core.ViewModelFactory;
 import client.views.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import shared.Message;
@@ -23,6 +24,7 @@ public class ChatController implements ViewController
   @FXML private ListView<Message> chatViewsGlobalChat; //
 
   @FXML private TextField messageTextField;
+  @FXML private Label onUsernameLabel;
 
 
   @Override public void init(ViewHandler viewHandler,

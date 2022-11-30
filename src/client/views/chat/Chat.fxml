@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -15,9 +17,9 @@
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Pane prefHeight="51.0" prefWidth="175.0" style="-fx-background-color: #a1f073;">
+                  <Pane prefHeight="51.0" prefWidth="175.0" style="-fx-background-color: cdb4db;">
                      <children>
-                        <Label layoutX="31.0" layoutY="12.0" text="Online users">
+                        <Label layoutX="59.0" layoutY="12.0" text="Online users">
                            <font>
                               <Font name="Trebuchet MS" size="20.0" />
                            </font>
@@ -25,27 +27,27 @@
                      </children>
                   </Pane>
                   <ListView fx:id="usersList" layoutY="52.0" prefHeight="289.0" prefWidth="175.0" />
-                  <Button layoutX="4.0" layoutY="349.0" mnemonicParsing="false" onAction="#onSelectUserButtonGlobalChat" prefHeight="39.0" prefWidth="167.0" style="-fx-background-color: caf0f8;" text="Select the user">
+                  <Button layoutX="4.0" layoutY="349.0" mnemonicParsing="false" onAction="#onSelectUserButtonGlobalChat" prefHeight="39.0" prefWidth="167.0" style="-fx-background-color: e5e5e5;" text="Select the user">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
+                  <ImageView fitHeight="39.0" fitWidth="38.0" layoutX="12.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../Downloads/userGlobalCHat-removebg-preview.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Pane layoutX="1.0" prefHeight="51.0" prefWidth="416.0" style="-fx-background-color: #a1f073;">
+                  <Pane layoutX="1.0" prefHeight="51.0" prefWidth="416.0" style="-fx-background-color: cdb4db;">
                      <children>
-                        <Label layoutX="145.0" layoutY="11.0" text="Chat">
+                        <Label fx:id="onUsernameLabel" layoutX="18.0" layoutY="6.0" prefHeight="38.0" prefWidth="382.0">
                            <font>
                               <Font name="Trebuchet MS" size="25.0" />
                            </font>
                         </Label>
-                        <Button layoutX="231.0" layoutY="3.0" mnemonicParsing="false" onAction="#onBackToIndivisualChat" prefHeight="45.0" prefWidth="182.0" style="-fx-background-color: c7f9cc;" text="Back to Indivisual Chat">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
                      </children>
                   </Pane>
                   <ListView fx:id="chatViewsGlobalChat" layoutX="1.0" layoutY="54.0" prefHeight="289.0" prefWidth="416.0" />
@@ -54,7 +56,7 @@
                         <Font size="15.0" />
                      </font>
                   </TextField>
-                  <Button layoutX="351.0" layoutY="350.0" mnemonicParsing="false" onAction="#onSendGlobalButton" prefHeight="39.0" prefWidth="60.0" style="-fx-background-color: caf0f8;" text="Send">
+                  <Button layoutX="351.0" layoutY="350.0" mnemonicParsing="false" onAction="#onSendGlobalButton" prefHeight="39.0" prefWidth="60.0" style="-fx-background-color: e0fbfc;" text="Send">
                      <font>
                         <Font size="14.0" />
                      </font>
